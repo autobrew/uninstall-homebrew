@@ -1,0 +1,11 @@
+name: 'Uninstall homebrew'
+description: 'Run the official homebrew uninstall script'
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        brew cask install xquartz 2>&1 | sed 's/^Warning/Note/'
+        curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
+        sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
+        hash -r && rm uninstall.sh
