@@ -6,6 +6,7 @@ runs:
     - shell: bash
       run: |
         brew cask install xquartz 2>&1 | sed 's/^Warning/Note/'
+        sudo cp -f $(which pkg-config) /opt/X11/bin/
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
         hash -r && rm uninstall.sh
