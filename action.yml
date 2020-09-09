@@ -10,3 +10,4 @@ runs:
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
         hash -r && rm uninstall.sh
+        cp -f /opt/X11/bin/pkg-config /usr/local/bin
