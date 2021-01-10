@@ -6,8 +6,11 @@ runs:
     - shell: bash
       run: |
         brew cask install xquartz 2>&1 | sed 's/^Warning/Note/'
-        sudo cp -f $(which pkg-config) /opt/X11/bin/
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
         hash -r && rm uninstall.sh
-        cp -f /opt/X11/bin/pkg-config /usr/local/bin
+    - shell: bash
+      run: |
+        curl -sSL http://dl.bintray.com/autobrew/catalina/gdal-3.2.0-catalina.tar.xz -o libs.tar.xz
+        tar -xf libs.tar.xz --strip 1 -C /usr/local/
+        rm -f libs.tar.xz
