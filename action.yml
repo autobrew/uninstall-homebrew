@@ -12,5 +12,5 @@ runs:
     - shell: bash
       run: |
         curl -sSL http://dl.bintray.com/autobrew/catalina/gdal-3.2.0-catalina.tar.xz -o libs.tar.xz
-        tar -xf libs.tar.xz --strip 1 -C /usr/local/
+        sudo tar -xf libs.tar.xz --strip 1 -C /usr/local/
         rm -f libs.tar.xz
