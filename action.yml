@@ -5,7 +5,10 @@ runs:
   steps:
     - shell: bash
       run: |
-        brew cask install xquartz 2>&1 | sed 's/^Warning/Note/'
+        brew install --cask xquartz 2>&1 | sed 's/^Warning/Note/'
+        echo "DISPLAY=$DISPLAY" >> $GITHUB_ENV
+    - shell: bash
+      run: |
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
         hash -r && rm uninstall.sh
