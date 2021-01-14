@@ -6,7 +6,6 @@ runs:
     - shell: bash
       run: |
         brew install --cask xquartz 2>&1 | sed 's/^Warning/Note/'
-        echo "DISPLAY=$DISPLAY" >> $GITHUB_ENV
     - shell: bash
       run: |
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
