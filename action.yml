@@ -13,7 +13,7 @@ runs:
         hash -r && rm uninstall.sh
     - shell: bash
       run: |
-        curl -sSL http://dl.bintray.com/autobrew/catalina/gdal-3.2.0-catalina.tar.xz -o libs.tar.xz
+        curl -sSL http://dl.bintray.com/autobrew/high_sierra/gdal-3.2.0-high_sierra.tar.xz -o libs.tar.xz
         sudo tar -xf libs.tar.xz --strip 1 -C /usr/local/
         rm -f libs.tar.xz
         echo "PROJ_LIB=/usr/local/share/proj" >> $GITHUB_ENV
