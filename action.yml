@@ -5,15 +5,26 @@ runs:
   steps:
     - shell: bash
       run: |
+        echo "Installing XQuartz..."
         brew install --cask xquartz 2>&1 | sed 's/^Warning/Note/'
     - shell: bash
       run: |
+        echo "Removing Homebrew..."
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
         hash -r && rm uninstall.sh
     - shell: bash
       run: |
+        echo "Installing GDAL..."
         curl -sSL http://dl.bintray.com/autobrew/high_sierra/gdal-3.2.0-high_sierra.tar.xz -o libs.tar.xz
         sudo tar -xf libs.tar.xz --strip 1 -C /usr/local/
         rm -f libs.tar.xz
         echo "PROJ_LIB=/usr/local/share/proj" >> $GITHUB_ENV
+    - shell: bash
+      run: |
+        echo "Installing Fortran..."
+        curl -fLo /tmp/gfortran82.dmg https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg
+        sudo hdiutil attach /tmp/gfortran82.dmg -mountpoint /Volumes/gfortran
+        sudo installer -pkg "/Volumes/gfortran/gfortran-8.2-Mojave/gfortran.pkg" -target /
+        sudo hdiutil detach /Volumes/gfortran
+        rm -f /tmp/gfortran82.dmg
