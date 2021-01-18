@@ -28,3 +28,4 @@ runs:
         sudo installer -pkg "/Volumes/gfortran/gfortran-8.2-Mojave/gfortran.pkg" -target /
         sudo hdiutil detach /Volumes/gfortran
         rm -f /tmp/gfortran82.dmg
+        echo "/usr/local/gfortran/bin" >> $GITHUB_PATH
