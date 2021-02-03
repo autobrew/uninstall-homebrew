@@ -3,10 +3,28 @@ description: 'Run the official homebrew uninstall script'
 runs:
   using: "composite"
   steps:
+    - name: Cache build tools
+      id: cache-tools
+      uses: actions/cache@v2
+      with:
+        path: |
+          /opt/X11
+          /usr/local/gfortran
+        key: ${{ runner.os }}-tools
     - shell: bash
+      if: steps.cache-tools.outputs.cache-hit != 'true'
       run: |
         echo "Installing XQuartz..."
         brew install --cask xquartz 2>&1 | sed 's/^Warning/Note/'
+    - shell: bash
+      if: steps.cache-tools.outputs.cache-hit != 'true'
+      run: |
+        echo "Installing Fortran..."
+        curl -fLo /tmp/gfortran82.dmg https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg
+        sudo hdiutil attach /tmp/gfortran82.dmg -mountpoint /Volumes/gfortran
+        sudo installer -pkg "/Volumes/gfortran/gfortran-8.2-Mojave/gfortran.pkg" -target /
+        sudo hdiutil detach /Volumes/gfortran
+        rm -f /tmp/gfortran82.dmg
     - shell: bash
       run: |
         echo "Removing Homebrew..."
@@ -20,12 +38,4 @@ runs:
         sudo tar -xf libs.tar.xz --strip 1 -C /usr/local/
         rm -f libs.tar.xz
         echo "PROJ_LIB=/usr/local/share/proj" >> $GITHUB_ENV
-    - shell: bash
-      run: |
-        echo "Installing Fortran..."
-        curl -fLo /tmp/gfortran82.dmg https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg
-        sudo hdiutil attach /tmp/gfortran82.dmg -mountpoint /Volumes/gfortran
-        sudo installer -pkg "/Volumes/gfortran/gfortran-8.2-Mojave/gfortran.pkg" -target /
-        sudo hdiutil detach /Volumes/gfortran
-        rm -f /tmp/gfortran82.dmg
         echo "/usr/local/gfortran/bin" >> $GITHUB_PATH
