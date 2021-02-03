@@ -6,8 +6,10 @@ runs:
     - shell: bash
       run: |
         echo "Removing Homebrew..."
+        cp $(which gtar) .
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
+        cp -f gtar /usr/local/bin/
         hash -r && rm uninstall.sh
         echo "Done removing homebrew!"
     - shell: bash
