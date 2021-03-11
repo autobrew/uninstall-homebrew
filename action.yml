@@ -4,23 +4,39 @@ runs:
   using: "composite"
   steps:
     - shell: bash
+      name: Run homebrew uninstall script
       run: |
         echo "Removing Homebrew..."
-        cp $(which gtar) $(which zstd) .
+        brew install gnu-tar zstd checkbashisms
+        cp $(which gtar) $(which zstd) $(which checkbashisms) .
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
-        cp -f gtar zstd /usr/local/bin/
+        cp -f gtar zstd checkbashisms /usr/local/bin/
         hash -r && rm uninstall.sh
         echo "Done removing homebrew!"
+
     - shell: bash
+      name: Install xQuartz if needed
       run: |
-        echo "Installing GDAL bundle..."
-        curl -sSL http://dl.bintray.com/autobrew/high_sierra/gdal-3.2.0-high_sierra.tar.xz -o libs.tar.xz
-        sudo tar -xf libs.tar.xz --strip 1 -C /usr/local/
-        rm -f libs.tar.xz
-        echo "Done installing GDAL!"
+        if [ -d "/opt/X11/lib" ]; then
+          echo "/opt/X11/lib exists. Skipping xQuartz installation"
+        else
+          echo "Downloading XQuartz..."
+          curl -fLo XQuartz-2.7.11.dmg https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.11.dmg
+          sudo hdiutil attach XQuartz-2.7.11.dmg -mountpoint /Volumes/xquartz
+          sudo installer -pkg "/Volumes/xquartz/XQuartz.pkg" -target /
+          sudo hdiutil detach /Volumes/xquartz
+          rm -f XQuartz-2.7.11.dmg
+          echo "Done installing XQuartz!"
+        fi
+
     - shell: bash
-      run:
-        echo "Setting path to proj and fortran"
-        echo "PROJ_LIB=/usr/local/share/proj" >> $GITHUB_ENV
-        echo "/usr/local/gfortran/bin" >> $GITHUB_PATH
+      name: Install pandoc if needed
+      run: |
+        if pandoc --version; then
+          echo "Skipping pandoc installation"
+        else
+          curl -fOL https://github.com/jgm/pandoc/releases/download/2.11.4/pandoc-2.11.4-macOS.pkg
+          sudo installer -pkg pandoc-2.11.4-macOS.pkg -target /
+          rm -f pandoc-2.11.4-macOS.pkg
+        fi
