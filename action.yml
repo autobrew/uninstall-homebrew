@@ -7,7 +7,7 @@ runs:
       name: Run homebrew uninstall script
       run: |
         echo "Removing Homebrew..."
-        brew install gnu-tar zstd checkbashisms
+        brew install gnu-tar zstd checkbashisms || true
         cp $(which gtar) $(which zstd) $(which checkbashisms) .
         curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
         sudo bash uninstall.sh --force --quiet 2>&1 | sed 's/Warning/Note/g'
